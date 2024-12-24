@@ -1,0 +1,10 @@
+.dropdown__content{
+background-color: darkred;
+}
+.dropdown__content--invisible {
+  visibility: hidden;
+}
+
+.dropdown__content--visible {
+  visibility: visible;
+}
