@@ -1,25 +1,33 @@
 .img-carousel {
   display: flex;
+  flex-direction: column;
+}
+
+.img-carousel__imgs {
+  display: flex;
   gap: 5px;
   height: 100vh;
   justify-content: center;
   align-items: center;
 }
+
 .img-carousel__button {
   background-color: black;
   color: snow;
   font-size: 2rem;
   flex: 0;
 }
-.img-carousel__img-container{
+
+.img-carousel__img-container {
   width: 40%;
   display: flex;
   justify-content: center;
 }
+
 .img-carousel__img {
   max-width: 90%;
-
 }
+
 .img-carousel__img--hidden {
   visibility: hidden;
   display: none;
@@ -29,4 +37,11 @@
   visibility: visible;
 }
 
+.img-carousel__dot {
+  border-radius: 100%;
+  border: 1px solid black;
+}
 
+.img-carousel__dot--selected {
+  background-color: blueviolet;
+}
