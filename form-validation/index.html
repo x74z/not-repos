@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <link href="styles.css" rel="stylesheet" />
+    <script src="code.js" defer> </script>
+</head>
+
+<body>
+  <div id="form">
+    <form class="form form--info-collector-form js-collector-form" novalidate>
+      <label for="mail" class="form__label form__label--">email
+          <input id="mail" class="form__email js-email" type="email" name="email" value="" required placeholder="Email" />
+          <span class="form__error-message js-error-email"></span>
+        </label>
+
+        <label for="zip" class="form__label form__label--">zip 
+          <input id="zip" class="form__zip js-zip" type="text" name="zip" value="" required placeholder="US zip code" pattern="^\d{5}(-\d{4})?$"/>
+          <span class="form__error-message js-error-zip"></span>
+        </label>
+
+        <label for="country" class="form__label form__label--">country 
+          <input id="country" class="form__country js-country" type="text" name="country" value="" required placeholder="country" />
+          <span class="form__error-message js-error-country"></span>
+        </label>
+
+      <label for="passw" class="form__label form__label--">password 
+          <input id="passw" class="form__password js-password" type="password" name="password" value="" required placeholder="password" pattern="^(?=.*\d)(?=(.*\W){1})(?=.*[a-zA-Z])(?!.*\s).{1,15}$"/>
+          <span class="form__error-message js-error-password"></span>
+        </label>
+
+      <label for="c-passw" class="form__label form__label--">confirm password 
+          <input id="c-passw" class="form__password-confirm js-confirm-password" type="password" name="password-validate" value="" required placeholder="confirm password" />
+          <span class="form__error-message js-error-confirm-password"></span>
+        </label>
+
+      <button class="form__button js-info-collector-submit-button" type="submit">Submit</button>
+
+    </form>
+  </div>
+</body>
+
+</html>
