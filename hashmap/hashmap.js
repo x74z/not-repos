@@ -65,7 +65,32 @@ class Hashmap {
     }
     return false;
   }
-  // NEXT TODO: actually use linked lists.
+  remove(key) {
+    const position = this.hash(key);
+    const bucketAtKeyPosition = this.buckets[position];
+    if (bucketAtKeyPosition !== undefined) {
+      // We do not use splice because that will make the array shorter.
+      this.buckets[position] = undefined;
+      return true;
+    }
+    return false;
+  }
+  length() {
+    let count = 0;
+    this.buckets.forEach((element) => {
+      if (element !== undefined) {
+        count += 1;
+      }
+    });
+    return count;
+  }
+  clear() {
+    this.buckets.forEach((element, index) => {
+      if (element !== undefined) {
+        this.buckets[index] = undefined;
+      }
+    });
+  }
 }
 
 const test = new Hashmap();
@@ -90,3 +115,12 @@ console.log(
   test.has("apple"),
   test.get("apple"),
 );
+
+// Should log: true, false
+console.log(test.remove("lion"), test.remove("afsdfasdfsdffffff"));
+
+// Should log: 9
+console.log(test.length());
+
+// Should log 0 values
+console.log(test.clear(), test.buckets);
