@@ -15,6 +15,20 @@ class Hashmap {
     }
     return hashCode % this.capacity;
   }
+  handleLoadFactor() {
+    // const entries = this.entries();
+
+    // if (this.capacity * this.loadFactor < this.entries.length) {
+    //   this.capacity = this.capacity * 2;
+    //   this.buckets = Array.apply(null, Array(capacity)).map(function () {});
+    //   entries.forEach((element, index) => {
+    //     this.set
+
+    //   })
+    // }
+    // I do not feel like doing this now, maybe tomorrow.
+    return;
+  }
 
   set(key, value) {
     // Should be [[key1,val1], [key2,val2], ...]
@@ -24,8 +38,12 @@ class Hashmap {
 
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
+    let wasJustAdded;
 
-    if (this.buckets[position] !== null) {
+    if (
+      this.buckets[position] === null ||
+      this.buckets[position] === undefined
+    ) {
       // If there aren't used, add the key-value pair
       // Makes a new linked list and appends the value to it, then adding it to the hashmap
       // (Bad comments ik, but i wont remember half of what these things do)
@@ -34,15 +52,19 @@ class Hashmap {
       linkedListWithValue.append(value);
       const arrayToAdd = [key, linkedListWithValue];
       this.buckets[position] = arrayToAdd;
-    } else if (this.buckets[position][0] === key) {
-      // Overwrite value if key is the same
-      // Remove the value from the linked list using its index and append the new value.
-
-      const linkedListFromBucket = bucketAtKeyPosition[1];
-      const linkedListIndexOfValue = linkedListFromBucket.find(value);
-      linkedListFromBucket.removeAt(linkedListIndexOfValue);
+      // console.log(this.buckets[position][0]);
+      // This is a way to check wether the value was just added or not.
+      // If it was just added, there's no point in checking if it needs to apped to the linked list
+      wasJustAdded = true;
+    } else if (this.buckets[position][0] === key && wasJustAdded === undefined) {
+      // Append the new value
+      const linkedListFromBucket = this.buckets[position][1];
       linkedListFromBucket.append(value);
+      // const linkedListIndexOfValue = linkedListFromBucket.find(value);
+      // linkedListFromBucket.removeAt(linkedListIndexOfValue);
+      // linkedListFromBucket.append(value);
     }
+    this.handleLoadFactor();
   }
 
   get(key) {
@@ -91,6 +113,33 @@ class Hashmap {
       }
     });
   }
+  keys() {
+    let keysArray = [];
+    this.buckets.forEach((element, index) => {
+      if (element !== undefined) {
+        keysArray.push(element[0]);
+      }
+    });
+    return keysArray;
+  }
+  values() {
+    let valuesArray = [];
+    this.buckets.forEach((element, index) => {
+      if (element !== undefined) {
+        valuesArray.push(element[1]);
+      }
+    });
+    return valuesArray;
+  }
+  entries() {
+    let entriesKeyValuePairsArray = [];
+    this.buckets.forEach((element, index) => {
+      if (element !== undefined) {
+        entriesKeyValuePairsArray.push(element);
+      }
+    });
+    return entriesKeyValuePairsArray;
+  }
 }
 
 const test = new Hashmap();
@@ -106,6 +155,8 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
+test.set("lion", "blue");
+test.set("lion", "black");
 
 // Should log: golden, true, false, true, Arr(with red)
 console.log(
@@ -117,10 +168,14 @@ console.log(
 );
 
 // Should log: true, false
-console.log(test.remove("lion"), test.remove("afsdfasdfsdffffff"));
+// console.log(test.remove("lion"), test.remove("afsdfasdfsdffffff"));
 
 // Should log: 9
 console.log(test.length());
 
 // Should log 0 values
-console.log(test.clear(), test.buckets);
+// console.log(test.clear(), test.buckets);
+
+console.log(test.keys());
+
+console.log(test.buckets);
