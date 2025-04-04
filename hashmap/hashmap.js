@@ -38,28 +38,24 @@ class Hashmap {
 
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
-    let wasJustAdded;
+    // let wasJustAdded;
 
-    if (
-      this.buckets[position] === null ||
-      this.buckets[position] === undefined
-    ) {
+    if (bucketAtKeyPosition === null || bucketAtKeyPosition === undefined) {
       // If there aren't used, add the key-value pair
       // Makes a new linked list and appends the value to it, then adding it to the hashmap
       // (Bad comments ik, but i wont remember half of what these things do)
 
-      const linkedListWithValue = new LinkedList();
-      linkedListWithValue.append(value);
-      const arrayToAdd = [key, linkedListWithValue];
-      this.buckets[position] = arrayToAdd;
+      const linkedListWithKeyValuePairs = new LinkedList();
+      const arrayToAdd = [key, value];
+      linkedListWithKeyValuePairs.append(arrayToAdd);
+      this.buckets[position] = linkedListWithKeyValuePairs;
       // console.log(this.buckets[position][0]);
-      // This is a way to check wether the value was just added or not.
-      // If it was just added, there's no point in checking if it needs to apped to the linked list
-      wasJustAdded = true;
-    } else if (this.buckets[position][0] === key && wasJustAdded === undefined) {
+    } else {
       // Append the new value
-      const linkedListFromBucket = this.buckets[position][1];
-      linkedListFromBucket.append(value);
+      bucketAtKeyPosition.append([key, value]);
+
+      // const linkedListFromBucket = this.buckets[position];
+      // linkedListFromBucket.append(value);
       // const linkedListIndexOfValue = linkedListFromBucket.find(value);
       // linkedListFromBucket.removeAt(linkedListIndexOfValue);
       // linkedListFromBucket.append(value);
@@ -72,9 +68,21 @@ class Hashmap {
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
 
-    if (bucketAtKeyPosition !== undefined) {
-      return bucketAtKeyPosition[1].list;
-    }
+    let value;
+    let found;
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          if (node.value[0] === key) {
+            value = node.value[1]
+            found = true;
+            return true;
+          }
+        });
+      }
+    });
+    if (found === true) return value;
+
     return null;
   }
   has(key) {
@@ -82,19 +90,38 @@ class Hashmap {
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
 
-    if (bucketAtKeyPosition !== undefined && bucketAtKeyPosition[0] === key) {
-      return true;
-    }
+    let found;
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          if (node.value[0] === key) {
+            found = true;
+            return true;
+          }
+        });
+      }
+    });
+    if (found === true) return true;
     return false;
   }
   remove(key) {
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
-    if (bucketAtKeyPosition !== undefined) {
-      // We do not use splice because that will make the array shorter.
-      this.buckets[position] = undefined;
-      return true;
-    }
+
+    let found;
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          if (node.value[0] === key) {
+            linkedList.removeAt(linkedList.find(node));
+            found = true;
+            return true;
+          }
+        });
+      }
+    });
+    if (found === true) return true;
+
     return false;
   }
   length() {
@@ -115,27 +142,34 @@ class Hashmap {
   }
   keys() {
     let keysArray = [];
-    this.buckets.forEach((element, index) => {
-      if (element !== undefined) {
-        keysArray.push(element[0]);
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          keysArray.push(node.value[0]);
+        });
       }
     });
     return keysArray;
   }
+
   values() {
     let valuesArray = [];
-    this.buckets.forEach((element, index) => {
-      if (element !== undefined) {
-        valuesArray.push(element[1]);
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          valuesArray.push(node.value[0]);
+        });
       }
     });
     return valuesArray;
   }
   entries() {
     let entriesKeyValuePairsArray = [];
-    this.buckets.forEach((element, index) => {
-      if (element !== undefined) {
-        entriesKeyValuePairsArray.push(element);
+    this.buckets.forEach((linkedList, index) => {
+      if (linkedList !== undefined) {
+        linkedList.list.forEach((node) => {
+          entriesKeyValuePairsArray.push(node.value);
+        });
       }
     });
     return entriesKeyValuePairsArray;
@@ -148,6 +182,7 @@ test.set("banana", "yellow");
 test.set("carrot", "orange");
 test.set("dog", "brown");
 test.set("elephant", "gray");
+// test.set("elephant", "fas");
 test.set("frog", "green");
 test.set("grape", "purple");
 test.set("hat", "black");
@@ -155,8 +190,8 @@ test.set("ice cream", "white");
 test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
-test.set("lion", "blue");
-test.set("lion", "black");
+// test.set("lion", "blue");
+// test.set("lion", "black");
 
 // Should log: golden, true, false, true, Arr(with red)
 console.log(
@@ -168,14 +203,18 @@ console.log(
 );
 
 // Should log: true, false
-// console.log(test.remove("lion"), test.remove("afsdfasdfsdffffff"));
+console.log(test.remove("carrot"), test.remove("afsdfasdfsdffffff"));
 
 // Should log: 9
-console.log(test.length());
+// console.log(test.length());
 
 // Should log 0 values
 // console.log(test.clear(), test.buckets);
 
 console.log(test.keys());
+console.log(test.values());
+console.log(test.entries());
 
 console.log(test.buckets);
+
+console.log(test.has("apple"), test.has("fdas"));
