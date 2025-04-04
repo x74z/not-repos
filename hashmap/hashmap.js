@@ -22,17 +22,26 @@ class Hashmap {
     // I will add them as regular values for now, later on to avoid
     // collisions I'll make them Linked lists.
 
-
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
 
     if (this.buckets[position] !== null) {
       // If there aren't used, add the key-value pair
-      const arrayToAdd = [key, value];
+      // Makes a new linked list and appends the value to it, then adding it to the hashmap
+      // (Bad comments ik, but i wont remember half of what these things do)
+
+      const linkedListWithValue = new LinkedList();
+      linkedListWithValue.append(value);
+      const arrayToAdd = [key, linkedListWithValue];
       this.buckets[position] = arrayToAdd;
     } else if (this.buckets[position][0] === key) {
       // Overwrite value if key is the same
-      bucketAtKeyPosition[1] = value;
+      // Remove the value from the linked list using its index and append the new value.
+
+      const linkedListFromBucket = bucketAtKeyPosition[1];
+      const linkedListIndexOfValue = linkedListFromBucket.find(value);
+      linkedListFromBucket.removeAt(linkedListIndexOfValue);
+      linkedListFromBucket.append(value);
     }
   }
 
@@ -42,7 +51,7 @@ class Hashmap {
     const bucketAtKeyPosition = this.buckets[position];
 
     if (bucketAtKeyPosition !== undefined) {
-      return bucketAtKeyPosition[1];
+      return bucketAtKeyPosition[1].list;
     }
     return null;
   }
@@ -51,10 +60,7 @@ class Hashmap {
     const position = this.hash(key);
     const bucketAtKeyPosition = this.buckets[position];
 
-    if (
-      bucketAtKeyPosition !== undefined &&
-      bucketAtKeyPosition[0] === key
-    ) {
+    if (bucketAtKeyPosition !== undefined && bucketAtKeyPosition[0] === key) {
       return true;
     }
     return false;
@@ -76,4 +82,11 @@ test.set("jacket", "blue");
 test.set("kite", "pink");
 test.set("lion", "golden");
 
-console.log(test.get("lion"), test.has("lion"), test.has("fasfdsfaasdfsda"));
+// Should log: golden, true, false, true, Arr(with red)
+console.log(
+  test.get("lion"),
+  test.has("lion"),
+  test.has("fasfdsfaasdfsda"),
+  test.has("apple"),
+  test.get("apple"),
+);
