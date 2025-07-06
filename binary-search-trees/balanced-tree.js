@@ -45,19 +45,43 @@ class Tree {
   buildTreeFromSortedArray(arr) {
     return this.buildTree(arr, 0, arr.length - 1);
   }
+
+  insert(root, value) {
+    if (root === null) {
+      return new Node(value);
+    }
+    // No duplicates
+    if (root.data === value) {
+      return root;
+    }
+    if (value < root.data) {
+      // If the value is smaller it goes to the left. 
+      root.left = this.insert(root.left, value);
+    }
+    if (value > root.data) {
+      root.right = this.insert(root.right, value);
+    }
+    return root;
+  }
+  deleteItem(root, value) { }
 }
 
-const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-const sortedAndNoDuplicatesArr = arr
-  .filter(function (item, pos) {
+function testTree(){
+  // Testing code below
+
+  const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+  const sortedAndNoDuplicatesArr = arr
+  .filter(function(item, pos) {
     return arr.indexOf(item) == pos;
   })
   .sort((a, b) => a - b);
-console.log(sortedAndNoDuplicatesArr)
-const test = new Tree();
-const tree = test.buildTreeFromSortedArray(sortedAndNoDuplicatesArr);
-console.log(tree)
-test.prettyPrint(tree);
+  console.log(sortedAndNoDuplicatesArr);
+  const test = new Tree();
+  const tree = test.buildTreeFromSortedArray(sortedAndNoDuplicatesArr);
+  console.log(tree);
+  test.prettyPrint(tree);
 
-
-
+  test.insert(tree, 21)
+  test.prettyPrint(tree);
+}
+testTree()
