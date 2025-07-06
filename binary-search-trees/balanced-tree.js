@@ -31,6 +31,7 @@ class Tree {
   }
 
   buildTree(arr, start, end) {
+    // https://www.geeksforgeeks.org/sorted-array-to-balanced-bst/
     if (start > end) return null;
     // console.log(arr);
     const mid = Math.floor((start + end) / 2);
@@ -47,6 +48,7 @@ class Tree {
   }
 
   insert(root, value) {
+    // https://www.geeksforgeeks.org/dsa/insertion-in-binary-search-tree/
     if (root === null) {
       return new Node(value);
     }
@@ -55,7 +57,7 @@ class Tree {
       return root;
     }
     if (value < root.data) {
-      // If the value is smaller it goes to the left. 
+      // If the value is smaller it goes to the left.
       root.left = this.insert(root.left, value);
     }
     if (value > root.data) {
@@ -63,25 +65,63 @@ class Tree {
     }
     return root;
   }
-  deleteItem(root, value) { }
+  getSuccesor(curr) {
+    curr = curr.right;
+    while (curr !== null && curr.left !== null) {
+      curr = curr.left;
+    }
+    return curr;
+  }
+  deleteItem(root, value) {
+    // https://www.geeksforgeeks.org/dsa/deletion-in-binary-search-tree/
+    // Base
+    if (root === null) {
+      return root;
+    }
+
+    // If value is in a subtree
+    if (root.value > value) {
+      root.left = this.deleteItem(root.left, value);
+    } else if (root.value > value) {
+      root.right = this.deleteItem(root.right, value);
+    } else {
+      // If root = value
+
+      // If it has 0 children or one right child
+      if (root.left === null) {
+        return root.right;
+      }
+      if (root.right === null) {
+        return root.left;
+      }
+      // If both children are present
+      let succesor = this.getSuccesor(root);
+      root.value = succesor.value;
+      root.right = this.deleteItem(root.right, succesor.value);
+    }
+    return root;
+  }
 }
 
-function testTree(){
+function testTree() {
   // Testing code below
 
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const sortedAndNoDuplicatesArr = arr
-  .filter(function(item, pos) {
-    return arr.indexOf(item) == pos;
-  })
-  .sort((a, b) => a - b);
+    .filter(function(item, pos) {
+      return arr.indexOf(item) == pos;
+    })
+    .sort((a, b) => a - b);
   console.log(sortedAndNoDuplicatesArr);
   const test = new Tree();
   const tree = test.buildTreeFromSortedArray(sortedAndNoDuplicatesArr);
   console.log(tree);
   test.prettyPrint(tree);
 
-  test.insert(tree, 21)
+  test.insert(tree, 21);
   test.prettyPrint(tree);
+  test.deleteItem(tree, 324)
+  test.prettyPrint(tree);
+  
 }
-testTree()
+testTree();
