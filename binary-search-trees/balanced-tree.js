@@ -101,6 +101,27 @@ class Tree {
     }
     return root;
   }
+  levelOrder(root, callbackFunc) {
+    if (callbackFunc === undefined) {
+      throw new Error("Callback function is undefined");
+    }
+    // Base case
+    if (root === null) return;
+
+    // This code will push the root node into the queue and then will loop through the array calling the callback in every currentNode.
+    let queue = [];
+    queue.push(root);
+    while (queue.length > 0) {
+      let currentNode = queue[0];
+
+      callbackFunc(currentNode);
+      if (currentNode.left !== null) queue.push(currentNode.left);
+
+      if (currentNode.right !== null) queue.push(currentNode.right);
+
+      queue.shift();
+    }
+  }
 }
 
 function testTree() {
@@ -108,7 +129,7 @@ function testTree() {
 
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
   const sortedAndNoDuplicatesArr = arr
-    .filter(function(item, pos) {
+    .filter(function (item, pos) {
       return arr.indexOf(item) == pos;
     })
     .sort((a, b) => a - b);
@@ -120,8 +141,9 @@ function testTree() {
 
   test.insert(tree, 21);
   test.prettyPrint(tree);
-  test.deleteItem(tree, 324)
+  test.deleteItem(tree, 324);
   test.prettyPrint(tree);
-  
+
+  test.levelOrder(tree, console.log);
 }
 testTree();
