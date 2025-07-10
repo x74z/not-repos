@@ -192,14 +192,36 @@ class Tree {
     // A binary tree is considered balanced if, for every node in the tree,
     // the height difference between its left and right subtrees is no more than 1,
     // and both the left and right subtrees are also balanced.
-    if (root === null) return true;
-    this.levelOrder(this.isBalanced, root);
-    let leftHeight = this.treeHeight(root.left);
-    let rightHeight = this.treeHeight(root.right);
-    if (Math.abs(leftHeight - rightHeight) <= 1) return true;
-    else return false;
+    if (this.checkIfBalanced(root) === -1) return false;
+    return true;
   }
-  rebalance(root = this.root) {}
+  checkIfBalanced(root = this.root) {
+    // This is basically reimplementing the height function to cover -1 cases.
+    // This helped me reach the solution: https://medium.com/@shaswata.ssaha/checking-if-a-binary-tree-is-height-balanced-a-complete-guide-5ba45efe2299
+    if (root === null) return 0; // Empty tree height = 0
+
+    const leftHeight = this.checkIfBalanced(root.left);
+    if (leftHeight == -1) return -1;
+    const rightHeight = this.checkIfBalanced(root.right);
+    if (rightHeight == -1) return -1;
+
+    // Check if current node is balanced
+    if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+    return 1 + Math.max(leftHeight, rightHeight);
+  }
+  rebalance(root = this.root) {
+    // This code goes through every value in the array, to rebuild the tree.
+    let valueArr = [];
+    const treeToArray = () => {
+      if (root !== null) {
+        valueArr.push(root.data);
+      }
+    };
+    this.levelOrder(treeToArray, root);
+    const newRoot = this.buildTreeFromArray(valueArr);
+    this.root = newRoot;
+    return newRoot;
+  }
 }
 
 function testTree() {
@@ -210,14 +232,26 @@ function testTree() {
   const testTree = new Tree(arr);
   testTree.prettyPrint(testTree.root);
 
+  // Test deleting and inserting items.
   // testTree.insert(21);
   // testTree.deleteItem( 324);
   // testTree.prettyPrint(testTree.root);
   // testTree.prettyPrint(tree);
 
+  // Test all traversal methods.
   // testTree.levelOrder(console.log);
   // testTree.postOrder(console.log);
   // testTree.inOrder(console.log);
   // testTree.preOrder(console.log);
+
+  // Test for imbalance
+  // testTree.insert(9988);
+  // testTree.insert(9989);
+  // testTree.insert(9998);
+  // testTree.prettyPrint(testTree.root);
+  // console.log(testTree.isBalanced());
+  // testTree.rebalance()
+  // console.log(testTree.isBalanced());
+
 }
 testTree();
