@@ -214,17 +214,18 @@ function testTree() {
   // Testing code below
 
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
+  // const easierArr = [1,1,2,3,4,5,6,7,8,9,10]
   const testTree = new Tree(arr);
   testTree.prettyPrint(testTree.root);
 
-  testTree.insert(21);
-  // testTree.prettyPrint();
-  testTree.deleteItem( 324);
+  // testTree.insert(21);
+  // testTree.deleteItem( 324);
+  // testTree.prettyPrint(testTree.root);
   // testTree.prettyPrint(tree);
 
-  testTree.levelOrder(console.log);
-  testTree.postOrder(console.log);
-  testTree.inOrder(console.log);
-  testTree.preOrder(console.log);
+  // testTree.levelOrder(console.log);
+  // testTree.postOrder(console.log);
+  // testTree.inOrder(console.log);
+  // testTree.preOrder(console.log);
 }
 testTree();
