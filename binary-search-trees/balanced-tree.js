@@ -43,8 +43,14 @@ class Tree {
     root.right = this.buildTree(arr, mid + 1, end);
     return root;
   }
-  buildTreeFromSortedArray(arr) {
-    return this.buildTree(arr, 0, arr.length - 1);
+  buildTreeFromArray(arr) {
+    // Remove all duplicates and sort an array to build a balanced tree
+    const newArr = arr
+      .filter(function (item, pos) {
+        return arr.indexOf(item) == pos;
+      })
+      .sort((a, b) => a - b);
+    return this.buildTree( newArr, 0, newArr.length - 1);
   }
 
   insert(root, value) {
@@ -149,31 +155,66 @@ class Tree {
     this.postOrder(root.right, callbackFunc);
     callbackFunc(root);
   }
+  findHeightUtil(root, value, height) {
+    if (!root) return -1;
+
+    let leftHeight = this.findHeightUtil(root.left, value, height);
+    let rightHeight = this.findHeightUtil(root.right, value, height);
+
+    let ans = Math.max(leftHeight, rightHeight) + 1;
+    if (root.data === value) height.value = ans;
+    return ans;
+  }
+  height(root, value) {
+    let height = { value: -1 };
+    this.findHeightUtil(root, value, height);
+    return height.value;
+  }
+  depth(root, value) {
+    if (!root) return -1;
+    let dist = -1;
+
+    if (
+      root.data === x ||
+      (dist = this.depth(root.left, value) >= 0) ||
+      (dist = this.depth(root.left, value) >= 0)
+    ) {
+      return dist + 1;
+    }
+  }
+  treeHeight(root) {
+    if (root === null) return 0;
+    let leftHeight = this.treeHeight(root.left);
+    let rightHeight = this.treeHeight(root.right);
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+  isBalanced(root) {}
+  rebalance(root) {}
 }
 
 function testTree() {
   // Testing code below
 
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-  const sortedAndNoDuplicatesArr = arr
-    .filter(function (item, pos) {
-      return arr.indexOf(item) == pos;
-    })
-    .sort((a, b) => a - b);
-  console.log(sortedAndNoDuplicatesArr);
+  // const sortedAndNoDuplicatesArr = arr
+  //   .filter(function (item, pos) {
+  //     return arr.indexOf(item) == pos;
+  //   })
+  //   .sort((a, b) => a - b);
+  // console.log(sortedAndNoDuplicatesArr);
   const test = new Tree();
-  const tree = test.buildTreeFromSortedArray(sortedAndNoDuplicatesArr);
-  console.log(tree);
+  const tree = test.buildTreeFromArray(arr);
+  // console.log(tree);
   test.prettyPrint(tree);
 
-  test.insert(tree, 21);
-  test.prettyPrint(tree);
-  test.deleteItem(tree, 324);
-  test.prettyPrint(tree);
+  // test.insert(tree, 21);
+  // test.prettyPrint(tree);
+  // test.deleteItem(tree, 324);
+  // test.prettyPrint(tree);
 
-  test.levelOrder(tree, console.log);
-  test.postOrder(tree, console.log);
-  test.inOrder(tree, console.log);
-  test.preOrder(tree, console.log);
+  // test.levelOrder(tree, console.log);
+  // test.postOrder(tree, console.log);
+  // test.inOrder(tree, console.log);
+  // test.preOrder(tree, console.log);
 }
 testTree();
