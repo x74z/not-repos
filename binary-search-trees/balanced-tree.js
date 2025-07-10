@@ -7,6 +7,10 @@ class Node {
 }
 
 class Tree {
+  constructor(arr) {
+    this.arr = arr;
+    this.root = this.buildTreeFromArray(this.arr);
+  }
   root = null;
   // constructor(arr) {
   //   this.arr = arr;
@@ -57,7 +61,7 @@ class Tree {
     return this.buildTree(newArr, 0, newArr.length - 1);
   }
 
-  insert(root, value) {
+  insert(value, root = this.root) {
     // https://www.geeksforgeeks.org/dsa/insertion-in-binary-search-tree/
     if (root === null) {
       return new Node(value);
@@ -68,10 +72,10 @@ class Tree {
     }
     if (value < root.data) {
       // If the value is smaller it goes to the left.
-      root.left = this.insert(root.left, value);
+      root.left = this.insert(value, root.left);
     }
     if (value > root.data) {
-      root.right = this.insert(root.right, value);
+      root.right = this.insert(value, root.right);
     }
     return root;
   }
@@ -82,7 +86,7 @@ class Tree {
     }
     return curr;
   }
-  deleteItem(root, value) {
+  deleteItem(value, root=this.root) {
     // https://www.geeksforgeeks.org/dsa/deletion-in-binary-search-tree/
     // Base
     if (root === null) {
@@ -91,9 +95,9 @@ class Tree {
 
     // If value is in a subtree
     if (root.value > value) {
-      root.left = this.deleteItem(root.left, value);
+      root.left = this.deleteItem(value, root.left);
     } else if (root.value > value) {
-      root.right = this.deleteItem(root.right, value);
+      root.right = this.deleteItem(value, root.right);
     } else {
       // If root = value
 
@@ -107,11 +111,11 @@ class Tree {
       // If both children are present
       let succesor = this.getSuccesor(root);
       root.value = succesor.value;
-      root.right = this.deleteItem(root.right, succesor.value);
+      root.right = this.deleteItem(succesor.value, root.right);
     }
     return root;
   }
-  levelOrder(root, callbackFunc) {
+  levelOrder(callbackFunc, root = this.root) {
     if (callbackFunc === undefined) {
       throw new Error("Callback function is undefined");
     }
@@ -132,103 +136,95 @@ class Tree {
       queue.shift();
     }
   }
-  preOrder(root, callbackFunc) {
+  preOrder(callbackFunc, root = this.root) {
     if (callbackFunc === undefined) {
       throw new Error("Callback function is undefined");
     }
     if (root === null) return;
     callbackFunc(root);
-    this.preOrder(root.left, callbackFunc);
-    this.preOrder(root.right, callbackFunc);
+    this.preOrder(callbackFunc, root.left);
+    this.preOrder(callbackFunc, root.right);
   }
-  inOrder(root, callbackFunc) {
+  inOrder(callbackFunc, root = this.root) {
     if (callbackFunc === undefined) {
       throw new Error("Callback function is undefined");
     }
     if (root === null) return;
-    this.inOrder(root.left, callbackFunc);
+    this.inOrder(callbackFunc, root.left);
     callbackFunc(root);
-    this.inOrder(root.right, callbackFunc);
+    this.inOrder(callbackFunc, root.right);
   }
-  postOrder(root, callbackFunc) {
+  postOrder(callbackFunc, root = this.root) {
     if (callbackFunc === undefined) {
       throw new Error("Callback function is undefined");
     }
     if (root === null) return;
-    this.postOrder(root.left, callbackFunc);
-    this.postOrder(root.right, callbackFunc);
+    this.postOrder(callbackFunc, root.left);
+    this.postOrder(callbackFunc, root.right);
     callbackFunc(root);
   }
-  findHeightUtil(root, value, height) {
+  findHeightUtil(value, height, root = this.root) {
     if (!root) return -1;
 
-    let leftHeight = this.findHeightUtil(root.left, value, height);
-    let rightHeight = this.findHeightUtil(root.right, value, height);
+    let leftHeight = this.findHeightUtil(value, height, root.left);
+    let rightHeight = this.findHeightUtil(value, height, root.right);
 
     let ans = Math.max(leftHeight, rightHeight) + 1;
     if (root.data === value) height.value = ans;
     return ans;
   }
-  height(root, value) {
+  height(value, root = this.root) {
     let height = { value: -1 };
-    this.findHeightUtil(root, value, height);
+    this.findHeightUtil(value, height, root);
     return height.value;
   }
-  depth(root, value) {
+  depth(value, root = this.root) {
     if (!root) return -1;
     let dist = -1;
 
     if (
       root.data === x ||
-      (dist = this.depth(root.left, value) >= 0) ||
-      (dist = this.depth(root.left, value) >= 0)
+      (dist = this.depth(value, root.left) >= 0) ||
+      (dist = this.depth(value, root.left) >= 0)
     ) {
       return dist + 1;
     }
   }
-  treeHeight(root) {
+  treeHeight(root = this.root) {
     if (root === null) return 0;
     let leftHeight = this.treeHeight(root.left);
     let rightHeight = this.treeHeight(root.right);
     return Math.max(leftHeight, rightHeight) + 1;
   }
-  isBalanced(root) {
+  isBalanced(root = this.root) {
     // A binary tree is considered balanced if, for every node in the tree,
     // the height difference between its left and right subtrees is no more than 1,
     // and both the left and right subtrees are also balanced.
     if (root === null) return true;
-    this.levelOrder(root, this.isBalanced);
+    this.levelOrder(this.isBalanced, root);
     let leftHeight = this.treeHeight(root.left);
     let rightHeight = this.treeHeight(root.right);
     if (Math.abs(leftHeight - rightHeight) <= 1) return true;
     else return false;
   }
-  rebalance(root) {}
+  rebalance(root = this.root) {}
 }
 
 function testTree() {
   // Testing code below
 
   const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324];
-  // const sortedAndNoDuplicatesArr = arr
-  //   .filter(function (item, pos) {
-  //     return arr.indexOf(item) == pos;
-  //   })
-  //   .sort((a, b) => a - b);
-  // console.log(sortedAndNoDuplicatesArr);
-  const test = new Tree();
-  const tree = test.buildTreeFromArray(arr);
-  // console.log(tree);
-  test.prettyPrint(tree);
+  const testTree = new Tree(arr);
+  testTree.prettyPrint(testTree.root);
 
-  // test.insert(tree, 21);
-  // test.prettyPrint(tree);
-  // test.deleteItem(tree, 324);
-  // test.prettyPrint(tree);
+  testTree.insert(21);
+  // testTree.prettyPrint();
+  testTree.deleteItem( 324);
+  // testTree.prettyPrint(tree);
 
-  // test.levelOrder(tree, console.log);
-  // test.postOrder(tree, console.log);
-  // test.inOrder(tree, console.log);
-  // test.preOrder(tree, console.log);
+  testTree.levelOrder(console.log);
+  testTree.postOrder(console.log);
+  testTree.inOrder(console.log);
+  testTree.preOrder(console.log);
 }
 testTree();
