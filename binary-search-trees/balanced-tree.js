@@ -11,10 +11,7 @@ class Tree {
     this.arr = arr;
     this.root = this.buildTreeFromArray(this.arr);
   }
-  root = null;
-  // constructor(arr) {
-  //   this.arr = arr;
-  // }
+
   prettyPrint(node, prefix = "", isLeft = true) {
     // Tip: If you would like to visualize your binary search tree, here is a prettyPrint() function that will console.log your tree in a structured format.
     // This function will expect to receive the root of your tree as the value for the node parameter.
@@ -56,7 +53,6 @@ class Tree {
     return newArr;
   }
   buildTreeFromArray(arr) {
-    // Remove all duplicates and sort an array to build a balanced tree
     const newArr = this.sortArray(arr);
     return this.buildTree(newArr, 0, newArr.length - 1);
   }
@@ -86,12 +82,9 @@ class Tree {
     }
     return curr;
   }
-  deleteItem(value, root=this.root) {
+  deleteItem(value, root = this.root) {
     // https://www.geeksforgeeks.org/dsa/deletion-in-binary-search-tree/
-    // Base
-    if (root === null) {
-      return root;
-    }
+    if (root === null) return root;
 
     // If value is in a subtree
     if (root.value > value) {
@@ -119,7 +112,6 @@ class Tree {
     if (callbackFunc === undefined) {
       throw new Error("Callback function is undefined");
     }
-    // Base case
     if (root === null) return;
 
     // This code will push the root node into the queue and then will loop through the array calling the callback in every currentNode.
@@ -173,19 +165,19 @@ class Tree {
     if (root.data === value) height.value = ans;
     return ans;
   }
-  height(value, root = this.root) {
+  heightOfNode(value, root = this.root) {
     let height = { value: -1 };
     this.findHeightUtil(value, height, root);
     return height.value;
   }
-  depth(value, root = this.root) {
+  depthOfNode(value, root = this.root) {
     if (!root) return -1;
     let dist = -1;
 
     if (
       root.data === x ||
-      (dist = this.depth(value, root.left) >= 0) ||
-      (dist = this.depth(value, root.left) >= 0)
+      (dist = this.depthOfNode(value, root.left) >= 0) ||
+      (dist = this.depthOfNode(value, root.left) >= 0)
     ) {
       return dist + 1;
     }
