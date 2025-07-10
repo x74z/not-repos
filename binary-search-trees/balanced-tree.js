@@ -43,13 +43,17 @@ class Tree {
     root.right = this.buildTree(arr, mid + 1, end);
     return root;
   }
-  buildTreeFromArray(arr) {
-    // Remove all duplicates and sort an array to build a balanced tree
+  sortArray(arr) {
     const newArr = arr
       .filter(function (item, pos) {
         return arr.indexOf(item) == pos;
       })
       .sort((a, b) => a - b);
+    return newArr;
+  }
+  buildTreeFromArray(arr) {
+    // Remove all duplicates and sort an array to build a balanced tree
+    const newArr = this.sortArray(arr);
     return this.buildTree(newArr, 0, newArr.length - 1);
   }
 
@@ -192,11 +196,12 @@ class Tree {
     // A binary tree is considered balanced if, for every node in the tree,
     // the height difference between its left and right subtrees is no more than 1,
     // and both the left and right subtrees are also balanced.
-    // if (root === null) return true;
-    // let leftHeight = this.treeHeight(root.left);
-    // let rightHeight = this.treeHeight(root.right);
-    // if (Math.abs(leftHeight - rightHeight) <= 1) return true;
-    // else return false;
+    if (root === null) return true;
+    this.levelOrder(root, this.isBalanced);
+    let leftHeight = this.treeHeight(root.left);
+    let rightHeight = this.treeHeight(root.right);
+    if (Math.abs(leftHeight - rightHeight) <= 1) return true;
+    else return false;
   }
   rebalance(root) {}
 }
