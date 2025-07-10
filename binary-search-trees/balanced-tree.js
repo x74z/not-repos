@@ -122,6 +122,33 @@ class Tree {
       queue.shift();
     }
   }
+  preOrder(root, callbackFunc) {
+    if (callbackFunc === undefined) {
+      throw new Error("Callback function is undefined");
+    }
+    if (root === null) return;
+    callbackFunc(root);
+    this.preOrder(root.left, callbackFunc);
+    this.preOrder(root.right, callbackFunc);
+  }
+  inOrder(root, callbackFunc) {
+    if (callbackFunc === undefined) {
+      throw new Error("Callback function is undefined");
+    }
+    if (root === null) return;
+    this.inOrder(root.left, callbackFunc);
+    callbackFunc(root);
+    this.inOrder(root.right, callbackFunc);
+  }
+  postOrder(root, callbackFunc) {
+    if (callbackFunc === undefined) {
+      throw new Error("Callback function is undefined");
+    }
+    if (root === null) return;
+    this.postOrder(root.left, callbackFunc);
+    this.postOrder(root.right, callbackFunc);
+    callbackFunc(root);
+  }
 }
 
 function testTree() {
@@ -145,5 +172,8 @@ function testTree() {
   test.prettyPrint(tree);
 
   test.levelOrder(tree, console.log);
+  test.postOrder(tree, console.log);
+  test.inOrder(tree, console.log);
+  test.preOrder(tree, console.log);
 }
 testTree();
