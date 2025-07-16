@@ -25,7 +25,7 @@ function getKnightPossibleMovingPositions(coordinate) {
 }
 function knightMoves(startingPos, endPos) {
   // So, as far as I understand, a valid moving position is [x+-1, y+-2] or [x+-2, y+-] as long as 0>=x,y<=7.
-  const possibleMoves = getKnightPossibleMovingPositions([startingPos]);
+  const possibleMoves = getKnightPossibleMovingPositions(startingPos);
   // TODO: figure out how to continue from here. 
 }
 
